@@ -68,21 +68,21 @@ ReplicatedStorage.ChildAdded:Connect(
 
 local window =
     library:AddWindow(
-    " | TeFaireEnrage",
+    " Maia Pessoal",
     {
-        main_color = Color3.fromRGB(0, 0, 0),
-        min_size = Vector2.new(750, 950),
+        main_color = Color3.fromRGB(54, 1, 63),
+        min_size = Vector2.new(450, 600),
         can_resize = true
     }
 )
 
 local MainTab = window:AddTab("Main")
-local KillingTab = window:AddTab("Killing")
-local FarmingTab = window:AddTab("Farming")
+local KillingTab = window:AddTab("Matando")
+local FarmingTab = window:AddTab("Cultivo")
 local PetsTab = window:AddTab("Pets")
-local TeleportTab = window:AddTab("Teleports")
-local MiscTab = window:AddTab("Misc")
-local StatsTab = window:AddTab("Stats")
+local TeleportTab = window:AddTab("Transporta")
+local MiscTab = window:AddTab("Variada")
+local StatsTab = window:AddTab("Estats")
 MainTab:Show()
 
 _G.whitelistedPlayers = _G.whitelistedPlayers or {}
@@ -308,7 +308,7 @@ MainTab:AddLabel("Essential Features")
 
 local antiKnockbackSwitch =
     MainTab:AddSwitch(
-    "Anti Fling", 
+    "Anti Retrocesso", 
     function(bool)
         local playerName = player.Name
         local character = game.Workspace:FindFirstChild(playerName)
@@ -367,7 +367,7 @@ antiKnockbackSwitch:Set(true)
 local lockRunning = false
 local lockSwitch =
     MainTab:AddSwitch(
-    "Lock Position",
+    "Posicao Bloqueio",
     function(state)
         lockRunning = state
         if lockRunning then
@@ -392,7 +392,7 @@ local lockSwitch =
 )
 
 MainTab:AddSwitch(
-    "Show Pets",
+    "Mostrar Pets",
     function(bool)
         if player:FindFirstChild("hidePets") then
             player.hidePets.Value = not bool
@@ -401,7 +401,7 @@ MainTab:AddSwitch(
 )
 
 MainTab:AddSwitch(
-    "Show Other Pets",
+    "Mostrar Outro Pets",
     function(bool)
         if player:FindFirstChild("showOtherPetsOn") then
             player.showOtherPetsOn.Value = bool
@@ -461,7 +461,7 @@ end
 task.spawn(createAllParts)
 
 MainTab:AddSwitch(
-    "Walk on Water",
+    "Mapa Completo Agua",
     function(bool)
         for _, part in ipairs(parts) do
             if part and part.Parent then
@@ -471,10 +471,10 @@ MainTab:AddSwitch(
     end
 )
 
-local autoFolder = MainTab:AddFolder("Auto Features")
+local autoFolder = MainTab:AddFolder("Recursos Autos")
 
 autoFolder:AddSwitch(
-    "Auto Spin Wheel",
+    "Roda Giratoria",
     function(bool)
         _G.AutoSpinWheel = bool
 
@@ -494,7 +494,7 @@ autoFolder:AddSwitch(
 )
 
 autoFolder:AddSwitch(
-    "Auto Claim Gifts",
+    "Ganhe Presentes",
     function(bool)
         _G.AutoClaimGifts = bool
 
@@ -512,11 +512,11 @@ autoFolder:AddSwitch(
     end
 )
 
-local rebirthFolder = MainTab:AddFolder("Rebirth System")
+local rebirthFolder = MainTab:AddFolder("Sistema Rena")
 local targetRebirthValue = 100
 
 rebirthFolder:AddTextBox(
-    "Target Rebirths",
+    "Renas Alvo",
     function(text)
         local newValue = tonumber(text)
         if newValue and newValue > 0 then
@@ -527,7 +527,7 @@ rebirthFolder:AddTextBox(
 
 local targetSwitch =
     rebirthFolder:AddSwitch(
-    "Auto Rebirth Target",
+    "Auto Alvo Renas",
     function(bool)
         _G.targetRebirthActive = bool
 
@@ -552,7 +552,7 @@ local targetSwitch =
 )
 
 rebirthFolder:AddSwitch(
-    "Auto Rebirth (Infinite)",
+    "Auto Renas (Infinito)",
     function(bool)
         _G.infiniteRebirthActive = bool
 
@@ -569,7 +569,7 @@ rebirthFolder:AddSwitch(
 )
 
 rebirthFolder:AddSwitch(
-    "Auto Size 1",
+    "Tamanho 1",
     function(bool)
         _G.autoSizeActive = bool
 
@@ -586,7 +586,7 @@ rebirthFolder:AddSwitch(
 )
 
 rebirthFolder:AddSwitch(
-    "Auto Teleport To King",
+    "Auto Rei",
     function(bool)
         _G.teleportActive = bool
 
@@ -604,11 +604,11 @@ rebirthFolder:AddSwitch(
     end
 )
 
-KillingTab:AddLabel("Player Management")
+KillingTab:AddLabel("Gerenciar Jogadores")
 
 local petDropdown =
     KillingTab:AddDropdown(
-    "Select Killing Pet",
+    "Selecione Matar Pet",
     function(text)
         local petsFolder = player.petsFolder
         for _, folder in pairs(petsFolder:GetChildren()) do
@@ -633,11 +633,11 @@ local petDropdown =
         end
     end
 )
-petDropdown:Add("Wild Wizard")
-petDropdown:Add("Mighty Monster")
+petDropdown:Add("Mago Selvagem")
+petDropdown:Add("Monstro Poderoso")
 
 KillingTab:AddSwitch(
-    "Remove Attack Animations",
+    "Remover Soco",
     function(bool)
         if bool then
             local blockedAnimations = {
@@ -724,30 +724,10 @@ local function checkPositionAndTeleport()
     end
 end
 
-KillingTab:AddSwitch(
-    "NaN Size",
-    function(bool)
-        isNanActive = bool
-
-        if bool then
-            local args = {[1] = "changeSize", [2] = 0 / 0}
-            ReplicatedStorage.rEvents.changeSpeedSizeRemote:InvokeServer(unpack(args))
-            _G.teleportLoop = RunService.Heartbeat:Connect(checkPositionAndTeleport)
-        else
-            if _G.teleportLoop then
-                _G.teleportLoop:Disconnect()
-                _G.teleportLoop = nil
-            end
-            local args = {[1] = "changeSize", [2] = 2}
-            ReplicatedStorage.rEvents.changeSpeedSizeRemote:InvokeServer(unpack(args))
-        end
-    end
-)
-
-local autoKillFolder = KillingTab:AddFolder("Auto Kill Systems")
+local autoKillFolder = KillingTab:AddFolder("Auto Elimina Sistemas")
 
 autoKillFolder:AddSwitch(
-    "Kill Everyone",
+    "Mate Todos",
     function(bool)
         _G.killAll = bool
         if bool then
@@ -775,7 +755,7 @@ autoKillFolder:AddSwitch(
 )
 
 autoKillFolder:AddSwitch(
-    "Whitelist Friends",
+    "Amigos Da Lista Branca",
     function(bool)
         _G.whitelistFriends = bool
 
@@ -817,11 +797,11 @@ autoKillFolder:AddSwitch(
     end
 )
 
-local killListFolder = KillingTab:AddFolder("Kill List System")
+local killListFolder = KillingTab:AddFolder("Mortes Lista Sistema")
 
 local blacklistDropdown =
     killListFolder:AddDropdown(
-    "Add to Kill List",
+    "Adicionar a Lista",
     function(selectedText)
         local playerName = selectedText:match("| (.+)$") or selectedText
         if playerName then
@@ -837,7 +817,7 @@ local blacklistDropdown =
 )
 
 killListFolder:AddSwitch(
-    "Kill List Active",
+    "Elimina Lista Ativa",
     function(bool)
         _G.killBlacklistedOnly = bool
         if bool then
@@ -864,10 +844,10 @@ killListFolder:AddSwitch(
     end
 )
 
-local whitelistFolder = KillingTab:AddFolder("Whitelist Management")
+local whitelistFolder = KillingTab:AddFolder("Gerenciar Lista Branca")
 
 whitelistFolder:AddTextBox(
-    "Add Player to Whitelist",
+    "Adicionar a Lista Branca",
     function(text)
         if text and text ~= "" then
             local foundPlayer = findClosestPlayer(text)
@@ -891,7 +871,7 @@ whitelistFolder:AddTextBox(
 )
 
 whitelistFolder:AddTextBox(
-    "Remove Player from Whitelist",
+    "Remover Da Lista Branca",
     function(text)
         if text and text ~= "" then
             local textLower = text:lower()
@@ -916,14 +896,14 @@ whitelistFolder:AddTextBox(
 )
 
 whitelistFolder:AddButton(
-    "Clear Whitelist",
+    "Limpar Lista Branca",
     function()
         _G.whitelistedPlayers = {}
     end
 )
 
 whitelistFolder:AddButton(
-    "Clear Kill List",
+    "Limpar Lista De Mortes",
     function()
         _G.blacklistedPlayers = {}
     end
