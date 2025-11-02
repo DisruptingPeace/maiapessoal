@@ -909,61 +909,11 @@ whitelistFolder:AddButton(
     end
 )
 
-local targetFolder = KillingTab:AddFolder("Target System")
-
-targetFolder:AddTextBox(
-    "Select Target Player",
-    function(text)
-        if text and text ~= "" then
-            local foundPlayer = findClosestPlayer(text)
-            if foundPlayer then
-                targetPlayer = foundPlayer
-            end
-        end
-    end
-)
-
-targetFolder:AddButton(
-    "Remove Target",
-    function()
-        targetPlayer = nil
-    end
-)
-
-targetFolder:AddSwitch(
-    "Auto Kill Target",
-    function(bool)
-        _G.autoKillTarget = bool
-
-        if bool and targetPlayer then
-            task.spawn(
-                function()
-                    while _G.autoKillTarget and targetPlayer do
-                        if isPlayerAlive(targetPlayer) then
-                            killPlayer(targetPlayer)
-                        end
-                        task.wait(0.1)
-                    end
-                end
-            )
-        end
-    end
-)
-
-targetFolder:AddButton(
-    "Kill Target Once",
-    function()
-        if targetPlayer then
-            killPlayer(targetPlayer)
-        end
-    end
-)
-
-local deathRingFolder = KillingTab:AddFolder("Death Ring")
+local deathRingFolder = KillingTab:AddFolder("Anel Da Morte")
 _G.deathRingRange = 20
 
 deathRingFolder:AddTextBox(
-    "Ring Range (1-140)",
+    "Faixa De Toque (1-140)",
     function(text)
         local range = tonumber(text)
         if range then
@@ -974,7 +924,7 @@ deathRingFolder:AddTextBox(
 
 local ringPart = nil
 deathRingFolder:AddSwitch(
-    "Show Ring Visual",
+    "Mostrar Visual Do Anel",
     function(bool)
         if bool then
             ringPart = Instance.new("Part")
@@ -996,7 +946,7 @@ deathRingFolder:AddSwitch(
 )
 
 deathRingFolder:AddSwitch(
-    "Death Ring Active",
+    "Anel Da Morte Ativo",
     function(bool)
         _G.deathRingEnabled = bool
 
@@ -1045,7 +995,7 @@ deathRingFolder:AddSwitch(
     end
 )
 
-local spectateFolder = KillingTab:AddFolder("Spectate System")
+local spectateFolder = KillingTab:AddFolder("Sistema De Espectadores")
 local selectedPlayerToSpectate = nil
 local spectating = false
 local currentTargetConnection = nil
@@ -1076,7 +1026,7 @@ end
 
 local spectateDropdown =
     spectateFolder:AddDropdown(
-    "Choose Player to Spectate",
+    "Escolha o Jogador",
     function(text)
         for _, targetPlayer in ipairs(Players:GetPlayers()) do
             local optionText = targetPlayer.DisplayName .. " | " .. targetPlayer.Name
@@ -1092,7 +1042,7 @@ local spectateDropdown =
 )
 
 spectateFolder:AddSwitch(
-    "Spectate",
+    "Espectadora",
     function(bool)
         spectating = bool
         if spectating and selectedPlayerToSpectate then
