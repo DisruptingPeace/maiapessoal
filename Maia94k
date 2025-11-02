@@ -1063,7 +1063,7 @@ spectateFolder:AddSwitch(
     end
 )
 
-local playerStatsFolder = KillingTab:AddFolder("Player Stats")
+local playerStatsFolder = KillingTab:AddFolder("Estatísticas do Jogador")
 
 local playerToInspect = nil
 local statDefinitions = {
@@ -1079,7 +1079,7 @@ local statDefinitions = {
 
 local inspectDropdown =
     playerStatsFolder:AddDropdown(
-    "Choose Player to Inspect",
+    "Escolha o Jogador",
     function(text)
         for _, targetPlayer in ipairs(Players:GetPlayers()) do
             local optionText = targetPlayer.DisplayName .. " | " .. targetPlayer.Name
@@ -1203,9 +1203,9 @@ task.spawn(
     end
 )
 
-FarmingTab:AddLabel("Farming Systems")
+FarmingTab:AddLabel("Sistemas Agricolas")
 
-local fastFarmFolder = FarmingTab:AddFolder("Fast Strength Farm")
+local fastFarmFolder = FarmingTab:AddFolder("Forca Rapida")
 
 local totalReps = 20
 local threadCount = 1
@@ -1290,7 +1290,7 @@ fastFarmFolder:AddTextBox(
 )
 
 fastFarmFolder:AddSwitch(
-    "Fast Rep Farm",
+    "Ativar Forca Rapida",
     function(state)
         if state then
             startFarming()
@@ -1300,78 +1300,14 @@ fastFarmFolder:AddSwitch(
     end
 )
 
-FarmingTab:AddSwitch(
-    "Auto Lift (Gamepass)",
-    function(bool)
-        if bool then
-            local gamepassFolder = ReplicatedStorage.gamepassIds
-            for _, gamepass in pairs(gamepassFolder:GetChildren()) do
-                local value = Instance.new("IntValue")
-                value.Name = gamepass.Name
-                value.Value = gamepass.Value
-                value.Parent = player.ownedGamepasses
-            end
-        else
-            if player and player.ownedGamepasses then
-                local gamepassFolder = ReplicatedStorage.gamepassIds
-                for _, gamepass in pairs(gamepassFolder:GetChildren()) do
-                    local ownedPass = player.ownedGamepasses:FindFirstChild(gamepass.Name)
-                    if ownedPass and ownedPass.Value == gamepass.Value then
-                        ownedPass:Destroy()
-                    end
-                end
-            end
-        end
-    end
-)
-
-FarmingTab:AddSwitch(
-    "Auto Punch (No Animation)",
-    function(enabled)
-        _G.autoPunching = enabled
-
-        if _G.autoPunching then
-            task.spawn(
-                function()
-                    local tool = player.Backpack:FindFirstChild("Punch") or player.Character:FindFirstChild("Punch")
-                    if not tool then
-                        repeat
-                            tool = player.Backpack:FindFirstChild("Punch") or player.Character:FindFirstChild("Punch")
-                            task.wait(0.1)
-                        until tool
-                    end
-
-                    if tool.Parent == player.Backpack then
-                        tool.Parent = player.Character
-                    end
-
-                    local hand = "leftHand"
-                    while _G.autoPunching do
-                        if player:FindFirstChild("muscleEvent") then
-                            player.muscleEvent:FireServer("punch", hand)
-                            hand = (hand == "leftHand") and "rightHand" or "leftHand"
-                        end
-                        task.wait(0.2)
-                    end
-                end
-            )
-        else
-            local tool = player.Character:FindFirstChild("Punch")
-            if tool then
-                tool.Parent = player.Backpack
-            end
-        end
-    end
-)
-
-local toolsFolder = FarmingTab:AddFolder("Tool Automation")
+local toolsFolder = FarmingTab:AddFolder("Auto Ferramentas")
 
 local selectedTool = nil
 local autoFarm = false
 
 local toolDropdown =
     toolsFolder:AddDropdown(
-    "Select Tool",
+    "Selecione Ferramenta",
     function(selection)
         selectedTool = selection
     end
@@ -1383,7 +1319,7 @@ for _, tool in ipairs(toolList) do
 end
 
 toolsFolder:AddSwitch(
-    "Start Tool Farm",
+    "Iniciar o Farm De Ferramentas",
     function(enabled)
         autoFarm = enabled
 
@@ -1477,7 +1413,7 @@ toolsFolder:AddSwitch(
     end
 )
 
-local rockFolder = FarmingTab:AddFolder("Rock Farming")
+local rockFolder = FarmingTab:AddFolder("Fazenda De Pedras")
 
 local rockData = {
     ["Tiny Rock"] = 0,
@@ -1506,7 +1442,7 @@ for rockName in pairs(rockData) do
 end
 
 rockFolder:AddSwitch(
-    "Auto Rock Farm",
+    "Auto Fazenda de Rocha",
     function(enabled)
         getgenv().RockFarmRunning = enabled
 
@@ -1542,7 +1478,7 @@ rockFolder:AddSwitch(
     end
 )
 
-local machineFolder = FarmingTab:AddFolder("Machine Farming")
+local machineFolder = FarmingTab:AddFolder("Fazenda de Maquinas")
 
 local selectedLocation = nil
 local selectedWorkout = nil
@@ -1610,7 +1546,7 @@ machineFolder:AddSwitch(
 
 local locationDropdown =
     machineFolder:AddDropdown(
-    "Select Gym",
+    "Selecione Academia",
     function(location)
         selectedLocation = location
     end
@@ -1623,7 +1559,7 @@ end
 
 local workoutDropdown =
     machineFolder:AddDropdown(
-    "Select Machine",
+    "Selecione a Maquina",
     function(machine)
         selectedWorkout = machine
     end
@@ -1634,7 +1570,7 @@ for _, workout in ipairs(workoutTypes) do
     workoutDropdown:Add(workout)
 end
 
-local consumablesFolder = FarmingTab:AddFolder("Consumables")
+local consumablesFolder = FarmingTab:AddFolder("Consumiveis")
 
 local function activateProteinEgg()
     local tool = player.Character:FindFirstChild("Protein Egg") or player.Backpack:FindFirstChild("Protein Egg")
@@ -1753,7 +1689,7 @@ task.spawn(
 )
 
 consumablesFolder:AddSwitch(
-    "Eat Everything",
+    "Coma Tudo",
     function(state)
         eatingRunning = state
         if state then
@@ -1762,11 +1698,11 @@ consumablesFolder:AddSwitch(
     end
 )
 
-PetsTab:AddLabel("Pet Shop System")
+PetsTab:AddLabel("Loja de Pets")
 
 local petDropdown =
     PetsTab:AddDropdown(
-    "Choose Pet",
+    "Selecione Pet",
     function(text)
         selectedPet = text
     end
@@ -1816,7 +1752,7 @@ for _, pet in ipairs(petList) do
 end
 
 PetsTab:AddSwitch(
-    "Buy Pet",
+    "Comprar Pet",
     function(bool)
         _G.AutoHatchPet = bool
 
@@ -1836,11 +1772,11 @@ PetsTab:AddSwitch(
     end
 )
 
-PetsTab:AddLabel("Aura System")
+PetsTab:AddLabel("Auras")
 
 local auraDropdown =
     PetsTab:AddDropdown(
-    "Select Aura",
+    "Selecione Aura",
     function(text)
         selectedAura = text
     end
@@ -1878,7 +1814,7 @@ for _, aura in ipairs(auraList) do
 end
 
 PetsTab:AddSwitch(
-    "Buy Aura",
+    "Comprar Aura",
     function(bool)
         _G.AutoHatchAura = bool
 
@@ -1898,7 +1834,7 @@ PetsTab:AddSwitch(
     end
 )
 
-local petManagementFolder = PetsTab:AddFolder("Pet Management")
+local petManagementFolder = PetsTab:AddFolder("Gerenciar Pets")
 
 local function unequipAllPets()
     local petsFolder = player.petsFolder
@@ -1923,41 +1859,41 @@ local function equipUniquePet(petName)
 end
 
 petManagementFolder:AddButton(
-    "Equip Swift Samurai",
+    "Equipar Swift Samurai",
     function()
         equipUniquePet("Swift Samurai")
     end
 )
 
 petManagementFolder:AddButton(
-    "Equip Wild Wizard",
+    "Equipar Wild Wizard",
     function()
         equipUniquePet("Wild Wizard")
     end
 )
 
 petManagementFolder:AddButton(
-    "Equip Mighty Monster",
+    "Equipar Mighty Monster",
     function()
         equipUniquePet("Mighty Monster")
     end
 )
 
 petManagementFolder:AddButton(
-    "Equip Tribal Overlord",
+    "Equipar Tribal Overlord",
     function()
         equipUniquePet("Tribal Overlord")
     end
 )
 
 petManagementFolder:AddButton(
-    "Unequip All Pets",
+    "Desequipar All Pets",
     function()
         unequipAllPets()
     end
 )
 
-local inventoryFolder = PetsTab:AddFolder("Inventory Management")
+local inventoryFolder = PetsTab:AddFolder("Gerenciar Inventario")
 
 local proteinEggLabel = inventoryFolder:AddLabel("Protein Eggs: 0")
 local tropicalShakeLabel = inventoryFolder:AddLabel("Tropical Shakes: 0")
@@ -1990,14 +1926,14 @@ task.spawn(
     end
 )
 
-local giftFolder = inventoryFolder:AddFolder("Gift System")
+local giftFolder = inventoryFolder:AddFolder("Sistema de Presentes")
 local selectedGiftPlayer = nil
 local eggGiftCount = 0
 local shakeGiftCount = 0
 
 local giftPlayerDropdown =
     giftFolder:AddDropdown(
-    "Choose Player",
+    "Selecione o Jogador",
     function(name)
         selectedGiftPlayer = Players:FindFirstChild(name)
     end
@@ -2018,7 +1954,7 @@ Players.PlayerAdded:Connect(
 )
 
 giftFolder:AddTextBox(
-    "Egg Amount",
+    "Egg Quantia",
     function(text)
         eggGiftCount = tonumber(text) or 0
     end
@@ -2041,7 +1977,7 @@ giftFolder:AddButton(
 )
 
 giftFolder:AddTextBox(
-    "Shake Amount",
+    "Shake Quantia",
     function(text)
         shakeGiftCount = tonumber(text) or 0
     end
@@ -2063,7 +1999,7 @@ giftFolder:AddButton(
     end
 )
 
-TeleportTab:AddLabel("Main Locations")
+TeleportTab:AddLabel("Main Locais")
 
 local mainTeleports = {
     {"Spawn", CFrame.new(2, 8, 115)},
@@ -2084,7 +2020,7 @@ for _, tp in ipairs(mainTeleports) do
     )
 end
 
-TeleportTab:AddLabel("Gyms")
+TeleportTab:AddLabel("Academias")
 
 local gymTeleports = {
     {"Muscle King Gym", CFrame.new(-8665.4, 17.21, -5792.9)},
@@ -2107,30 +2043,10 @@ for _, tp in ipairs(gymTeleports) do
     )
 end
 
-TeleportTab:AddLabel("Brawl Areas")
-
-local brawlTeleports = {
-    {"Brawl Regular", CFrame.new(-1849, 20, -6335)},
-    {"Brawl Desert", CFrame.new(960, 17, -7398)},
-    {"Brawl Lava", CFrame.new(4471, 119, -8836)},
-    {"Beach Brawl", CFrame.new(-1849, 20, -6335)}
-}
-
-for _, tp in ipairs(brawlTeleports) do
-    TeleportTab:AddButton(
-        tp[1],
-        function()
-            local char = player.Character or player.CharacterAdded:Wait()
-            local hrp = char:WaitForChild("HumanoidRootPart")
-            hrp.CFrame = tp[2]
-        end
-    )
-end
-
-local specialFolder = TeleportTab:AddFolder("Special Teleports")
+local specialFolder = TeleportTab:AddFolder("Especiais Transportes")
 
 specialFolder:AddButton(
-    "Jungle Squat Machine",
+    "Agachamento Na Selva",
     function()
         local char = player.Character or player.CharacterAdded:Wait()
         local hrp = char:WaitForChild("HumanoidRootPart")
@@ -2143,7 +2059,7 @@ specialFolder:AddButton(
 )
 
 specialFolder:AddButton(
-    "King Teleport + Auto",
+    "King Transportes + Auto",
     function()
         local char = player.Character or player.CharacterAdded:Wait()
         local hrp = char:WaitForChild("HumanoidRootPart")
@@ -2153,30 +2069,10 @@ specialFolder:AddButton(
 
 MiscTab:AddLabel("Miscellaneous Features")
 
-local movementFolder = MiscTab:AddFolder("Movement")
+local movementFolder = MiscTab:AddFolder("Movimento")
 
 movementFolder:AddSwitch(
-    "Infinite Jump",
-    function(bool)
-        _G.InfiniteJump = bool
-
-        if bool then
-            local InfiniteJumpConnection =
-                UserInputService.JumpRequest:Connect(
-                function()
-                    if _G.InfiniteJump then
-                        player.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
-                    else
-                        InfiniteJumpConnection:Disconnect()
-                    end
-                end
-            )
-        end
-    end
-)
-
-movementFolder:AddSwitch(
-    "No-Clip",
+    "Sem Clipe",
     function(bool)
         _G.NoClip = bool
 
@@ -2203,7 +2099,7 @@ local visualFolder = MiscTab:AddFolder("Visual")
 
 local timeDropdown =
     visualFolder:AddDropdown(
-    "Change Time",
+    "Mudar Hora",
     function(selection)
         if selection == "Night" then
             Lighting.ClockTime = 0
@@ -2215,12 +2111,12 @@ local timeDropdown =
     end
 )
 
-timeDropdown:Add("Night")
-timeDropdown:Add("Day")
-timeDropdown:Add("Midnight")
+timeDropdown:Add("Noite")
+timeDropdown:Add("Dia")
+timeDropdown:Add("Meia Noite")
 
 visualFolder:AddButton(
-    "Anti Lag",
+    "Anti Atraso",
     function()
         local playerGui = player:WaitForChild("PlayerGui")
 
@@ -2266,7 +2162,7 @@ visualFolder:AddButton(
     end
 )
 
-local autoSystemsFolder = MiscTab:AddFolder("Auto Systems")
+local autoSystemsFolder = MiscTab:AddFolder("Auto Sistemas")
 
 autoSystemsFolder:AddSwitch(
     "Auto Brawl Join",
